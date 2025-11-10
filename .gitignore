@@ -1,0 +1,24 @@
+# Private keys and certs
+certs/*.key.pem
+certs/*.key
+certs/*.pem
+certs/*.p12
+certs/*.crt
+
+# Transcripts and logs (sensitive)
+transcripts/
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor / pycache
+__pycache__/
+*.py[cod]
+*.swp
+.vscode/
+.venv/
+venv/
+.env/
