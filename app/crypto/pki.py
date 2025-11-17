@@ -11,6 +11,7 @@ Implements:
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.x509.oid import NameOID
+from cryptography.hazmat.primitives.asymmetric import padding
 import datetime
 
 
@@ -63,7 +64,8 @@ def verify_certificate_chain(peer_cert: x509.Certificate, ca_cert: x509.Certific
         ca_cert.public_key().verify(
             peer_cert.signature,
             peer_cert.tbs_certificate_bytes,
-            peer_cert.signature_hash_algorithm
+            padding.PKCS1v15(),
+            peer_cert.signature_hash_algorithm,
         )
     except Exception as e:
         raise BadCertificateError(f"BAD_CERT: Signature verification failed: {e}")
@@ -72,7 +74,6 @@ def verify_certificate_chain(peer_cert: x509.Certificate, ca_cert: x509.Certific
     now = datetime.datetime.utcnow()
     if not (peer_cert.not_valid_before <= now <= peer_cert.not_valid_after):
         raise BadCertificateError("BAD_CERT: Certificate expired or not yet valid.")
-
 
 def verify_hostname(peer_cert: x509.Certificate, expected_cn: str):
     """
